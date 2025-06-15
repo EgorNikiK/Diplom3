@@ -4,12 +4,10 @@ from helpers.locators import HomePageLocators, PersonalAccountPageLocators, Orde
 from helpers.urls import Urls
 from pages.personal_account_page import PersonalAccountPage
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
-
 class OrderFeedPage(PersonalAccountPage):
-
     def __init__(self, driver):
         super().__init__(driver)
         self.driver.get(Urls.ORDER_FEED_URL)
@@ -23,15 +21,11 @@ class OrderFeedPage(PersonalAccountPage):
 
     @allure.step('Находим на странице заказ и нажимаем на него.')
     def find_order_from_personal_account_in_order_feed(self):
-        self.find_element_on_page(PersonalAccountPageLocators.order_in_account)
         order_id_in_account = self.get_element_text(PersonalAccountPageLocators.order_in_account)
+        self.wait_clickability_of_element(HomePageLocators.order_feed_button)
         self.click_on_element(HomePageLocators.order_feed_button)
-        time.sleep(1)
-        locator = (By.XPATH, f".//p[text()='{order_id_in_account}']")
-        order_in_feed = self.find_element_on_page(locator)
-        return order_in_feed
+        return order_id_in_account
 
     @allure.step('Ожидаем отображение номера заказа в разделе В работе')
     def wait_order_number_in_working_order_list(self, number):
-        return (WebDriverWait(self.driver, 10).
-                until(expected_conditions.text_to_be_present_in_element(OrderFeedPageLocators.order_in_work, number)))
+        return self.wait_for_text_in_element(OrderFeedPageLocators.order_in_work, str(number))

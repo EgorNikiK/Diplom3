@@ -1,6 +1,5 @@
 from selenium.webdriver.common.by import By
 
-
 class HomePageLocators:
 
     main_page_title = (By.XPATH, ".//h1[text()='Соберите бургер']")
