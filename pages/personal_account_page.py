@@ -1,9 +1,10 @@
 import allure
-import time
-from helpers.locators import PersonalAccountPageLocators
 from helpers.urls import Urls
 from pages.base_page import BasePage
-
+from helpers.locators import PersonalAccountPageLocators
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 class PersonalAccountPage(BasePage):
     def __init__(self, driver):
@@ -34,14 +35,14 @@ class PersonalAccountPage(BasePage):
     def enter_to_personal_account(self, email, password):
         self.open_url(Urls.HOME_PAGE_URL)
         self.do_login(email, password)
-        time.sleep(1)
+        self.wait_visibility_of_element(PersonalAccountPageLocators.profile_label)
         self.go_to_user_profile_page()
 
     @allure.step('Переходим в раздел История заказов.')
     def go_to_order_history(self):
         self.click_on_element(PersonalAccountPageLocators.order_history_button)
-        time.sleep(1)
-        self.check_element_is_focused(PersonalAccountPageLocators.order_history_button)
+        self.wait_clickability_of_element(PersonalAccountPageLocators.order_history_button)
+        self.wait_visibility_of_element(PersonalAccountPageLocators.order_history_label)
 
     @allure.step('Выходим из личного кабинета.')
     def do_logout(self):
